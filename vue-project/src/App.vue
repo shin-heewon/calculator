@@ -14,13 +14,49 @@ export default {
 
       const number = event.currentTarget.value;
 
+      if(number === 'C'){
+        this.output = null;
+        this.operator = null;   // 현재 연산자를 저장
+        this.prev = null;  // 현재 값을 이전 값으로 저장 (숫자로 변환)
+        this.cur = null;
+        return;
+      }
+
       if(['+','-','*','/','='].includes(number)){
+
+        if(this.prev !== null && number === "="){
+          
+          this.cur = Number(this.cur);
+          
+          switch(this.operator){
+          case '+':
+          this.output = this.prev + this.cur;
+            return;
+
+          case '-':
+            this.output = this.prev - this.cur;
+            return;
+
+          case '*':
+            this.output = this.prev * this.cur;
+            return;
+          case '/':
+            this.output = this.prev / this.cur;
+            return;
+
+          }
+      }else if(this.prev === null && number === "="){
+        this.output = this.cur;
+        this.cur = null;
+        return;
+      }
+
         //연산로직 구현
         this.output = null;   // 출력값을 초기화
         this.operator = number;   // 현재 연산자를 저장
         this.prev = Number(this.cur);  // 현재 값을 이전 값으로 저장 (숫자로 변환)
         this.cur = null;   // 현재 값을 초기화
- 
+        
         return;
       }
 
@@ -30,22 +66,6 @@ export default {
       //입력한 값이 출력칸(output)에 표시되도록 output 데이터에 저장
       this.output = this.cur;
 
-      if(this.prev != null){
-
-        this.cur = Number(this.cur);
-
-        switch(this.operator){
-          case '+':
-            this.output = this.prev + this.cur;
-            break;
-          
-        }
-
-
-      }
-
-
-
     },
   },
 
@@ -53,6 +73,13 @@ export default {
 </script>
 
 <template>
+
+    cur :  {{ cur }}<br>
+    prev : {{ prev }}<br>
+    operator : {{ operator }}<br>
+    output : {{ output }}<br>
+
+
       <div class="calculator">
         <form name="forms">
           <input v-model="output" type="text" name="output" readonly />
